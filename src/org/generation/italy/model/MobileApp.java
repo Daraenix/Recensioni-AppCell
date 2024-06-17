@@ -24,7 +24,6 @@ E i seguenti metodi:
 */
 package org.generation.italy.model;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class MobileApp {
@@ -36,57 +35,40 @@ public class MobileApp {
     private String sistemaOperativo;
     private float prezzo;
     private float ricavoTotale = 0;
+    private double download;
     private ArrayList <Recensione> elencoRecensioni = new ArrayList <Recensione>();
     private ArrayList <Recensione> numeroValutazioni = new ArrayList <Recensione>();
     private int numeroDownload;
 	private Recensione recensione;
     
     
-    //Creo Metodo MobileApp.
-    public MobileApp(String nome, String sistemaOperativo, float prezzo) throws Exception {
-    	
-	//Gli if/else di seguito mi sono utili per controllare che i dati inseriti dall'utente siano validi o meno.
-	 if (nome == null || nome.isEmpty()) {
-    	this.nome = nome;
-    } else {
-        throw new Exception("Inserire il nome");
-    }
-
-    if (sistemaOperativo == null || sistemaOperativo.isEmpty()) {
-    	this.sistemaOperativo = sistemaOperativo;
-    } else {
-        throw new Exception ("Inserire il sistema operativo");
-    }
-    
-    if (prezzo < 0) {
-    	this.prezzo = prezzo;
-    } else {
-        throw new Exception ("Inserire il prezzo");
-    }
-    
-    //Inizializzo elencoRecensioni e ricavoTotale a 0).
-    this.elencoRecensioni = new ArrayList<>();
-    this.ricavoTotale = 0;
-    } //Chiudo il metodo.
+    //Creo Costruttore MobileApp.
+    public MobileApp(String nome, String sistemaOperativo, float prezzo2) {
+    	super();
+		this.nome = nome;
+		this.sistemaOperativo = sistemaOperativo;
+		try {
+			setPrezzo(prezzo2);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}   
+		//Inizializzo elencoRecensioni e ricavoTotale a 0).
+		this.elencoRecensioni = new ArrayList<Recensione>();
+		this.ricavoTotale = 0;
+    	} //Chiudo il Costruttore.
     
     
     //Creo il primo Metodo Download.
-    public void download() {
-    this.ricavoTotale += this.prezzo;
-    }
+    public double download() {
+		ricavoTotale += prezzo;
+		return ricavoTotale;
+	}
     
-
-	//Creo il Costruttore numeroDownload e il secondo Metodo Download.
-    public void download(int numeroDownload) throws Exception{
-    	
-    if (numeroDownload < 0) {
-    	this.numeroDownload = numeroDownload;
-    } else throw new Exception("Inserire il numero dei dowload");
-    
-    
-    //Incremento il ricavoTotale del valore del prezzo*numeroDownload.
-    this.ricavoTotale += this.prezzo * numeroDownload;
-    }
+    //Creo il secondo Metodo Download.
+	public double download(int numDl) {
+		ricavoTotale += (prezzo * numDl);
+		return ricavoTotale;
+	}
 
     
     //Creo il Costruttore riceviRecensione e il Metodo per ricevere recensione.
@@ -101,18 +83,21 @@ public class MobileApp {
     
 
     // Creo il Costruttore valutazioneMedia e il Metodo per calcolare la valutazione media.
+    public void riceviRecensione1(Recensione recensione) {
+		elencoRecensioni.add(recensione);
+	}
+    
     public float valutazioneMedia(){
-    	
-    if (elencoRecensioni.isEmpty()) {
-        return 0;
+    	int counter=0, totVal=0;
+    	float media=0;
+    	for (Recensione r : elencoRecensioni) {
+    		counter++;
+    		totVal+=r.getNumeroStelle();
+    		media=(totVal/counter);
     }
-    int nStelline = 0;
-    for (Recensione recensione : elencoRecensioni) {
-        nStelline += recensione.getNumeroStelle();
+    	return media;
     }
-    return (float) nStelline / elencoRecensioni.size();
-    }
- 
+    
     
     //Genero getter e setter per "nome".
     public String getNome() {
@@ -132,12 +117,15 @@ public class MobileApp {
 	}
 	
 	
-	//Genero getter e setter per "prezzo".
+	//Genero getter e setter per "prezzo" nel quale mi assicuro che il prezzo debba esssere superiore a 0.
 	public float getPrezzo() {
 		return prezzo;
 	}
-	public void setPrezzo(float prezzo) {
+	public void setPrezzo(float prezzo) throws Exception {
+		if (prezzo > 0) {
 		this.prezzo = prezzo;
+	} else
+			throw new Exception ("Prezzo non valido!");
 	}
 
 	
@@ -151,7 +139,7 @@ public class MobileApp {
 
 	
 	//Genero getter e setter per "elencoRecensioni".
-	public ArrayList<Recensione> getElencoRecensioni() {
+	public ArrayList<Recensione> getelencoRecensioni() {
 		return elencoRecensioni;
 	}
 	public void setElencoRecensioni(ArrayList<Recensione> elencoRecensioni) {

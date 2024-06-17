@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class Recensione {
    
 	/*Genero le proprietà che voglio che abbia la Recensione o meglio gli attributi che la caratterizzano;
-	scelgo di farli incapsulati (visibilità non public) cosicchè se andranno modificati necessiterà chiamare medoti public*/
+	scelgo di farli incapsulati (visibilità non public) cosicchè se andranno modificati necessiterà chiamare medoti public.*/
 	
     private LocalDate data;
     private String nomeUtente;
@@ -24,68 +24,56 @@ public class Recensione {
     private String testo;
 
     // Creo Costruttore.
-    public Recensione(LocalDate data, String nomeUtente, int numeroStelle, String testo) throws Exception {
+    public Recensione(LocalDate data, String nomeUtente, int numeroStelle, String testo) {
+    	super();
+    	this.data = LocalDate.now();
+    	try {
+    		this.numeroStelle = setNumeroStelle(numeroStelle);
+    	} catch (Exception e) {
+    		System.out.println(e.getMessage());
+    	}
+    	this.nomeUtente = nomeUtente;
+    	this.testo = testo;
+    	
+    }//chiudo Costruttore.
     
-    //Gli if/else di seguito mi sono utili per controllare che i dati inseriti dall'utente siano validi o meno.
-    	if (data == null) {
-        	this.data=data;
-        }  else { 
-        	throw new Exception("La data non può essere null");
-        }
-        
-        if (nomeUtente == null || nomeUtente.isEmpty()) {
-        	this.nomeUtente = nomeUtente;
-        } else {
-        	throw new Exception("Il nome utente non può essere null o vuoto");
-        }
-        
-        
-        if (numeroStelle < 1 || numeroStelle > 5) {
-        	this.numeroStelle = numeroStelle;
-        } else {
-        	throw new Exception ("Il numero di stelle deve essere compreso tra 1 e 5");
-        }
-        
-        
-        if (testo == null || testo.isEmpty()) {
-        	this.testo = testo;
-        } else {
-            throw new Exception("Il testo non può essere null o vuoto");
-        }
-       } //Chiudo Costruttore
-
     
-    //Genero getter e setter per "data".
+    //Genero Getter e Setter per data.
 	public LocalDate getData() {
 		return data;
 	}
-	public void setData(LocalDate data) {
-		this.data = data;
+	public LocalDate settData() {
+		return data;
 	}
 	
 	
-	//Genero getter e setter per "nomeUtente".
+	//Genero Getter e Setter per nomeUtente.
 	public String getNomeUtente() {
 		return nomeUtente;
 	}
+
 	public void setNomeUtente(String nomeUtente) {
 		this.nomeUtente = nomeUtente;
+			
 	}
-
 	
-	//Genero getter e setter per "numeroStelle".
+	//Genero Getter e Setter per numeroStelle.
 	public int getNumeroStelle() {
 		return numeroStelle;
 	}
-	public void setNumeroStelle(int numeroStelle) {
-		this.numeroStelle = numeroStelle;
+	public int setNumeroStelle(int numeroStelle) throws Exception { 
+		//Verifica che il valore di numeroStelle vada da 1a5.
+		if (numeroStelle > 0 && numeroStelle < 6)
+			return numeroStelle;
+		else
+			throw new Exception("Numero stelle non valido.");
 	}
 	
-	
-	//Genero getter e setter per "testo".
+	//Genero Getter e Setter per testo.
 	public String getTesto() {
 		return testo;
 	}
+
 	public void setTesto(String testo) {
 		this.testo = testo;
 	}
@@ -94,7 +82,8 @@ public class Recensione {
 	così da stampare la Recensione con i suoi attributi quando si dovrà mostrare all'utente.*/
 	@Override
 	public String toString() {
-		return "Recensione [data=" + data + ", nomeUtente=" + nomeUtente + ", numeroStelle=" + numeroStelle + ", testo=" + testo + "]";
+		return "Data: " + data +"\nNome Utente: " + nomeUtente + "\nRecensione: \n''"
+				+ testo + "''";
 	}
 
- } //fine classe Recensione.
+}//fine classe Recensione.
